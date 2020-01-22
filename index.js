@@ -1,5 +1,4 @@
 //Movie app JS
-
 const fetchMovie = async searchInput => {
   const response = await axios.get("http://www.omdbapi.com", {
     params: {
@@ -14,17 +13,19 @@ const fetchMovie = async searchInput => {
   return response.data.Search;
 };
 
+//creating html for drop down menu
 const root = document.querySelector(".auto__complete");
 root.innerHTML = `
-<label><b>Search For a Movie</b></label>
+<label><h2 class="search__input-heading">Search For a Movie</h2></label>
 <input type="text" class="search__input-one input" />
 <div class="dropdown">
-<div >
+<div class="movie">
 <div class="newMovie"></div>
 </div>
 </div>
 `;
 
+//appending api call data to html that was created before
 const onInput = async event => {
   //setting search results to a variable
   const searchResults = await fetchMovie(event.target.value);
@@ -34,14 +35,15 @@ const onInput = async event => {
   //looping through variable and outputting HTML
   for (let result of searchResults) {
     const movieOption = document.createElement("a");
-    movieOption.classList.add("dropdown-item");
+    const imageSrc = result.Poster === "N/A" ? "" : result.Poster;
+    movieOption.classList.add("dropdown__item");
     //multi-line using back ticks
     movieOption.innerHTML = `
-  <img src="${result.Poster}" class="dropdown-item-poster"/>
-  ${result.Title}
-  ${result.Year}
+  <img src="${imageSrc}" class="dropdown__poster"/>
+  <h5>${result.Title}</h5>
+  <h5>${result.Year}</h5>
   `;
-    console.log(movieOption);
+    // console.log(movieOption);
     resultWrapper.appendChild(movieOption);
   }
 };
@@ -51,3 +53,12 @@ const dropdown = document.querySelector(".dropdown");
 const resultWrapper = document.querySelector(".newMovie");
 const input = document.querySelector(".search__input-one");
 input.addEventListener("input", debounceFc(onInput, 500));
+// document.addEventListener("click", event => {
+//   console.log(event.target);
+//   if (!root.contains(event.target)) {
+//     const divRemove = document.querySelector(".movie");
+//     divRemove.removeChild(resultWrapper);
+//     const newDiv = document.createElement("div");
+//     newDiv.classList.add("newMovie");
+//   }
+// });
