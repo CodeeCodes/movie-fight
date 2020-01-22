@@ -1,0 +1,34 @@
+/* declaring colour variables for future changes */
+:root {
+  --black: #040403;
+  --grey: #5b5b5b;
+  --lightGrey: #828489;
+  --red: #bb0a21;
+  --blue: #88b7b5;
+}
+
+.hero__body {
+  padding: 10px 12.5% 0 12.5%;
+  background-color: var(--black);
+  color: var(--lightGrey);
+  height: 60px;
+}
+.conatiner {
+  margin: 0 12.5%;
+}
+
+input {
+  border: 1px solid var(--black);
+  border-radius: 5px;
+}
+/*-------------dropdown menu----------*/
+.dropdown-item-poster {
+  height: auto;
+  width: 15%;
+}
+.dropdown-menu {
+  width: 50vw;
+}
+.dropdown-item {
+  padding: 0;
+}
