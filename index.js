@@ -13,52 +13,74 @@ const fetchMovie = async searchInput => {
   return response.data.Search;
 };
 
-//creating html for drop down menu
-const root = document.querySelector(".auto__complete");
-root.innerHTML = `
-<label><h2 class="search__input-heading">Search For a Movie</h2></label>
-<input type="text" class="search__input-one input" />
-<div class="dropdown">
-<div class="movie">
-<div class="newMovie"></div>
-</div>
+createAutoComplete({
+  root: document.querySelector(".auto__complete"),
+  renderOption(movie) {
+    const imageSrc = movie.Poster === "N/A" ? "" : movie.Poster;
+    return `
+<img src="${imageSrc}" class="dropdown__poster"/>
+<div class"dropdown__item-div">
+<h5 class="dropdown__item-heading">${movie.Title}</h5>
+<h5 class="dropdown__item-heading">${movie.Year}</h5>
 </div>
 `;
-
-//appending api call data to html that was created before
-const onInput = async event => {
-  //setting search results to a variable
-  const searchResults = await fetchMovie(event.target.value);
-  //clear search results
-  resultWrapper.innerHTML = "";
-  dropdown.classList.add("is-active");
-  //looping through variable and outputting HTML
-  for (let result of searchResults) {
-    const movieOption = document.createElement("a");
-    const imageSrc = result.Poster === "N/A" ? "" : result.Poster;
-    movieOption.classList.add("dropdown__item");
-    //multi-line using back ticks
-    movieOption.innerHTML = `
-  <img src="${imageSrc}" class="dropdown__poster"/>
-  <h5>${result.Title}</h5>
-  <h5>${result.Year}</h5>
-  `;
-    // console.log(movieOption);
-    resultWrapper.appendChild(movieOption);
   }
+});
+
+createAutoComplete({
+  root: document.querySelector(".auto__complete2")
+});
+
+createAutoComplete({
+  root: document.querySelector(".auto__complete3")
+});
+//Selecting input and adding event listener and debounce function
+
+//adding functionality to click off list and collapse menu
+
+// document.addEventListener("click", event => {
+//   dropdown.classList.remove("not-active");
+//   dropdown.classList.add("is-active");
+//   console.log(event.target);
+// });
+
+//function to fetch further details using imdbID
+const getMovieInfo = async result => {
+  const response = await axios.get("http://www.omdbapi.com", {
+    params: {
+      apikey: "4e5e4294",
+      i: result.imdbID
+    }
+  });
+
+  document.querySelector(".movie__details").innerHTML = renderMovie(
+    response.data
+  );
 };
 
-//Selecting input and adding event listener and debounce function
-const dropdown = document.querySelector(".dropdown");
-const resultWrapper = document.querySelector(".newMovie");
-const input = document.querySelector(".search__input-one");
-input.addEventListener("input", debounceFc(onInput, 500));
-// document.addEventListener("click", event => {
-//   console.log(event.target);
-//   if (!root.contains(event.target)) {
-//     const divRemove = document.querySelector(".movie");
-//     divRemove.removeChild(resultWrapper);
-//     const newDiv = document.createElement("div");
-//     newDiv.classList.add("newMovie");
-//   }
-// });
+//rendering info on the front end
+const renderMovie = details => {
+  return `
+  <div class="movie__details-div">
+  <img src=${details.Poster} alt="movie image" class="movie__details-image"/>
+  <div class="movie__details-div-small">
+  <h3 class="movie__details-heading">Title:</h3>
+  <h4 class="movie__details-heading">${details.Title}</h4>
+  <h3 class="movie__details-heading">Rated:</h3>
+  <h5 class="movie__details-heading">${details.Rated}</h5>
+  <h3 class="movie__details-heading">Director:</h3>
+  <h5 class="movie__details-heading">${details.Director}</h5>
+  <h3 class="movie__details-heading"Actors:></h3>
+  <h5 class="movie__details-heading">${details.Actors}</h5>
+  <h3 class="movie__details-heading">Awards:</h3>
+  <h5 class="movie__details-heading">${details.Awards}</h5>
+  <h3 class="movie__details-heading">Runtime:</h3>
+  <h5 class="movie__details-heading">${details.Runtime}</h5>
+  <h3 class="movie__details-heading">Released:</h3>
+  <h5 class="movie__details-heading">${details.Released}</h5>
+  <h3 class="movie__details-heading">Genre</h3>
+  <h5 class="movie__details-heading">${details.Genre}</h5>
+  </div>
+  </div>
+  `;
+};

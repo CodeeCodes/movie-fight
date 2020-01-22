@@ -73,6 +73,24 @@ input {
   width: 50%;
   margin-left: 24.5%;
 }
+.dropdown__item-heading {
+  /* margin-right: 5%; */
+  margin-left: 5%;
+}
+
+.not-active {
+  display: none;
+}
 .newMovie {
   width: 50%;
+}
+/*-------movies----------*/
+.movie__details-div {
+  display: flex;
+}
+.movie__details-div-small {
+  display: 50%;
+}
+.movie__details-image {
+  width: 30%;
 }
